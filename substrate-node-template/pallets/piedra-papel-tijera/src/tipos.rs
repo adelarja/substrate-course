@@ -1,3 +1,6 @@
+use frame_support::pallet_prelude::*;
+use frame_system::pallet_prelude::*;
+
 #[derive(Encode, Decode, Debug, PartialEq, Eq, Clone, TypeInfo, MaxEncodedLen)]
 pub enum CantidadDeJugadores {
 	Cero,

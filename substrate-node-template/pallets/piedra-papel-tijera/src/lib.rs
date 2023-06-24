@@ -21,7 +21,9 @@ mod tipos;
 #[frame_support::pallet]
 pub mod pallet {
 	use super::*;
+	use crate::tipos::*;
 	use frame_support::pallet_prelude::*;
+	use frame_support::sp_runtime::traits::Hash;
 	use frame_system::pallet_prelude::*;
 
 	#[pallet::pallet]
@@ -87,31 +89,8 @@ pub mod pallet {
 	// Dispatchable functions must be annotated with a weight and must return a DispatchResult.
 	#[pallet::call]
 	impl<T: Config> Pallet<T> {
-		/// An example dispatchable that takes a singles value as a parameter, writes the value to
-		/// storage and emits an event. This function must be dispatched by a signed extrinsic.
+
 		#[pallet::call_index(0)]
-		#[pallet::weight(T::DbWeight::get().writes(1))]
-		pub fn registrar2(origen: OriginFor<T>) -> DispatchResult {
-			let quien = ensure_signed(origen)?;
-
-			let mut jugadores = Jugadores::<T>::get();
-
-			if let Some(primer_jugador) = jugadores.first() {
-				ensure!(*primer_jugador != quien, Error::<T>::YaRegistrado);
-			}
-			if let Some(segundo_jugador) = jugadores.last() {
-				ensure!(*segundo_jugador != quien, Error::<T>::YaRegistrado);
-			}
-
-			ensure!(jugadores.try_push(quien.clone()).is_ok(), Error::<T>::JuegoLleno);
-			Jugadores::<T>::set(jugadores);
-
-			Self::deposit_event(Event::Registrado{ quien });
-
-			Ok(())
-		}
-
-		#[pallet::call_index(1)]
 		#[pallet::weight(T::DbWeight::get().writes(1))]
 		pub fn registrar(origen: OriginFor<T>) -> DispatchResult {
 			// Revisar etapa del juego
@@ -138,7 +117,7 @@ pub mod pallet {
 			Ok(())
 		}
 
-		#[pallet::call_index(2)]
+		#[pallet::call_index(1)]
 		#[pallet::weight(T::DbWeight::get().writes(1))]
 		pub fn commit(origen: OriginFor<T>, hash: HashDe<T>) -> DispatchResult {
 			let mut etapa = EtapaDelJuego::<T>::get();
@@ -169,7 +148,7 @@ pub mod pallet {
 			Ok(())
 		}
 
-		#[pallet::call_index(3)]
+		#[pallet::call_index(2)]
 		#[pallet::weight(T::DbWeight::get().writes(1))]
 		pub fn reveal(origen: OriginFor<T>, jugada: Jugada, nonce: u128) -> DispatchResult {
 			let mut etapa = EtapaDelJuego::<T>::get();
@@ -206,7 +185,7 @@ pub mod pallet {
 			Ok(())
 		}
 
-		#[pallet::call_index(4)]
+		#[pallet::call_index(3)]
 		#[pallet::weight(T::DbWeight::get().writes(1))]
 		pub fn finalizar_juego(_origen: OriginFor<T>) -> DispatchResult {
 			let etapa = EtapaDelJuego::<T>::get();
