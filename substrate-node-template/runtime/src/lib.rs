@@ -35,7 +35,7 @@ pub use frame_support::{
 		},
 		IdentityFee, Weight,
 	},
-	StorageValue,
+	PalletId, StorageValue,
 };
 pub use frame_system::Call as SystemCall;
 pub use pallet_balances::Call as BalancesCall;
@@ -268,9 +268,15 @@ impl pallet_sudo::Config for Runtime {
 }
 
 /// Configure the pallet-template in pallets/template.
+parameter_types! {
+	pub const PPTPalletId: PalletId = PalletId(*b"py/pptij");
+}
 impl pallet_piedra_papel_tijera::Config for Runtime {
 	type RuntimeEvent = RuntimeEvent;
 	type WeightInfo = pallet_piedra_papel_tijera::weights::SubstrateWeight<Runtime>;
+	type Currency = Balances;
+	type PalletId = PPTPalletId;
+	type TokensParaJugar = ConstU128<10000>;
 }
 
 // Create the runtime by composing the FRAME pallets that were previously configured.

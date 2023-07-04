@@ -1,4 +1,5 @@
 use frame_support::pallet_prelude::*;
+use frame_support::traits::Currency;
 use frame_system::pallet_prelude::*;
 
 #[derive(Encode, Decode, Debug, PartialEq, Eq, Clone, TypeInfo, MaxEncodedLen)]
@@ -49,3 +50,5 @@ impl Etapa {
         };
     }
 }
+
+pub type BalanceDe<T> = <<T as crate::Config>::Currency as Currency<CuentaDe<T>>>::Balance;

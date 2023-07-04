@@ -23,7 +23,8 @@ pub mod pallet {
 	use super::*;
 	use crate::tipos::*;
 	use frame_support::pallet_prelude::*;
-	use frame_support::sp_runtime::traits::Hash;
+	use frame_support::sp_runtime::traits::{Hash, AccountIdConversion};
+	use frame_support::{PalletId, traits::Currency};
 	use frame_system::pallet_prelude::*;
 
 	#[pallet::pallet]
@@ -36,6 +37,13 @@ pub mod pallet {
 		type RuntimeEvent: From<Event<Self>> + IsType<<Self as frame_system::Config>::RuntimeEvent>;
 		/// Type representing the weight of this pallet
 		type WeightInfo: WeightInfo;
+		type Currency: Currency<Self::AccountId>;
+
+		#[pallet::constant]
+		type PalletId: Get<PalletId>;
+
+		#[pallet::constant]
+		type TokensParaJugar: Get<BalanceDe<Self>>;
 	}
 
 	// The pallet's runtime storage items.
@@ -208,6 +216,12 @@ pub mod pallet {
 			Self::deposit_event(Event::Fin { ganador });
 		
 			Ok(())
+		}
+	}
+
+	impl<T: Config> Pallet<T> {
+		pub fn account_id() -> T::AccountId {
+			T::PalletId::get().into_account_truncating()
 		}
 	}
 }
